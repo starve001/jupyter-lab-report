@@ -1,0 +1,41 @@
+{
+  "_note": "示例单元格清单：python scripts/nbkit.py build examples/cells.example.json draft.ipynb --course <你的课程key>。md/code 交替，章节用中文数字编号。",
+  "cells": [
+    {
+      "type": "md",
+      "source": "# 实验示例 线性回归——房价预测\n\n学号：REPLACE　姓名：REPLACE　日期：REPLACE"
+    },
+    {
+      "type": "md",
+      "source": "## 一、导包"
+    },
+    {
+      "type": "code",
+      "source": "import pandas as pd\nimport numpy as np\nfrom sklearn.linear_model import LinearRegression\n\nimport matplotlib.pyplot as plt\nplt.rcParams['font.sans-serif'] = ['REPLACE-LOCAL-CJK-FONT']\nplt.rcParams['axes.unicode_minus'] = False"
+    },
+    {
+      "type": "md",
+      "source": "## 二、读取数据\n\n数据按课件里的相对路径读取，所以先把 csv 拷进本目录的 `data/` 下。"
+    },
+    {
+      "type": "code",
+      "source": "df = pd.read_csv('./data/house.csv')\ndf"
+    },
+    {
+      "type": "code",
+      "source": "df.describe()"
+    },
+    {
+      "type": "md",
+      "source": "## 三、建模"
+    },
+    {
+      "type": "code",
+      "source": "X = df[['area']]\ny = df['price']\nmodel = LinearRegression().fit(X, y)\nprint('R2 =', round(model.score(X, y), 4))"
+    },
+    {
+      "type": "md",
+      "source": "## 结果分析\n\n1. R2 的读法：…\n2. 与课件差异：…\n3. 业务含义：…"
+    }
+  ]
+}

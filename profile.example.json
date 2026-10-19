@@ -1,0 +1,33 @@
+{
+  "_readme": [
+    "环境档案模板：复制成 ~/.nbkit/profile.json 再改，或用 `python scripts/nbkit.py init/set` 写入。",
+    "本文件是仓库里唯一允许出现路径样子的地方，全部为占位值，不含任何真实个人信息。",
+    "字段缺了不会瞎猜：`python scripts/nbkit.py check` 会打印标准题面让 agent 来问。"
+  ],
+  "student": {
+    "id": "REPLACE-WITH-YOUR-ID",
+    "name": "REPLACE-WITH-YOUR-NAME"
+  },
+  "deliver_pattern": "{id}-{name}-{exp}",
+  "default_course": "REPLACE-COURSE-KEY",
+  "courses": {
+    "REPLACE-COURSE-KEY": {
+      "label": "Course display name",
+      "materials_dirs": ["~/courseware"],
+      "data_search_dirs": ["~/datasets"],
+      "output_dir": "~/work/REPLACE-COURSE-KEY",
+      "python": "python3",
+      "kernel": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "tools": {
+    "print_pdf": {
+      "engine": "chrome-headless",
+      "path": "REPLACE-OR-LEAVE-OUT-FOR-AUTODETECT"
+    }
+  },
+  "pitfalls": [
+    "Optional free-form reminders for this machine, e.g. 'the lecture PDFs are image-only, no text layer'."
+  ]
+}

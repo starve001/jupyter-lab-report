@@ -1,0 +1,24 @@
+# 个人环境档案绝不进仓库
+profile.json
+profile.local.json
+profile.*.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 构建中间件与交付物
+*.html
+draft.ipynb
+*.pdf
+cells.json
+examples/out/
+.ipynb_checkpoints/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

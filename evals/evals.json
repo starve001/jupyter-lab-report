@@ -1,0 +1,79 @@
+{
+  "skill_name": "jupyter-lab-report",
+  "_note": "断言里不出现任何真实姓名/学号/机器路径：期望值一律来自档案。EVAL-ID / EVAL-Name / <profile 里的目录> 是占位符，跑评测时由临时档案提供。",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "把 Downloads 里的 实验五.pdf 这份课件复刻成一个 1021.ipynb，重命名为学号-姓名-实验名称，最后出 pdf",
+      "expected_output": "档案 output_dir 下产出 <id>-<name>-实验五-….ipynb（真跑过、0 error、md 章节与代码块交替）+ 同名 A4 PDF；课件里的内网数据源不可达时先问用户，同意后才用本地 csv 派生并在 notebook 里注明；临时件已清理。",
+      "files": ["<courseware>/实验五.pdf"],
+      "assertions": [
+        {"text": "动手前先执行 check/preflight，输出的署名与三类目录全部来自 profile.json，命令里没有手写的绝对路径"},
+        {"text": "产出 .ipynb 与同名 .pdf，文件名由档案 deliver_pattern 拼出"},
+        {"text": "notebook 真执行过：audit 0 error，且代码单元格带非空输出"},
+        {"text": "执行用的是档案 courses.<k>.python 那个解释器（notebook 里打印 sys.executable 可自证），而不是 nbconvert 恰好所在的环境"},
+        {"text": "至少 5 个 markdown 单元格，章节用中文数字编号，与代码块交替"},
+        {"text": "PDF 里中文正常渲染、无方框，且抽查过首页与末页"},
+        {"text": "交付目录只剩 .ipynb + .pdf + data/，中间 HTML 与构建脚本已删"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "按 实验四-逻辑回归.pdf 的流程做一个 notebook，数据用合适的 csv，交付到档案里的输出目录",
+      "expected_output": "输出目录下 <id>-<name>-实验四-逻辑回归.ipynb（约 37 单元格、0 报错、2 张图）+ 同名 PDF；数据集从 data_search_dirs 拷进 data/；课件 import 了但未使用的库不去用；结论段数字按实测值写。",
+      "files": ["<datasets>/telco-churn.csv"],
+      "assertions": [
+        {"text": "单元格顺序与课件 In[n] 一致，未擅自增删步骤"},
+        {"text": "画图前设置本机真实存在的中文字体与 axes.unicode_minus（字体名来自 nbkit fonts，不是照抄别家机器）"},
+        {"text": "关键数字与课件逐项对数：总样本、缺失值数、训练/测试切分规模"},
+        {"text": "结果分析用实测指标值，不抄课件数字"},
+        {"text": "数据文件拷到 <output_dir>/data/ 下，notebook 用相对路径 ./data/ 读取"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "这份课件里的数据文件我电脑里应该没有，你看着办，先把 ipynb 搭出来",
+      "expected_output": "先确认数据集缺失并问用户实际路径或是否允许用本地现有数据集派生；不静默造数据、不拿语义不同的数据集直接开跑。",
+      "files": [],
+      "assertions": [
+        {"text": "在动手前就数据集缺失向用户提问，或明确给出就地取材方案并等确认"},
+        {"text": "未生成伪造的 csv/假数据文件"}
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "（NBKIT_PROFILE 指向一份空档案）照着这份课件给我做实验报告",
+      "expected_output": "check 抛错并给出标准题面；用所在 agent 的提问方式按固定顺序一次问全：课程 key → 署名编号 → 姓名 → 课件目录 → 找数据目录 → 输出目录 → 解释器；答完用 init/set 落盘再继续。绝不拿同名或相邻目录兜底。",
+      "files": [],
+      "assertions": [
+        {"text": "在创建任何 notebook 文件之前完成提问，且缺项一次问全而非多轮挤牙膏"},
+        {"text": "题面来自 nbkit ask / ProfileError 的输出，字段名与档案一致"},
+        {"text": "答案通过 nbkit init/set 写回 profile.json，而不是只用于当次会话"},
+        {"text": "第二次 check 不再出现缺失字段，并打印完整路径清单"},
+        {"text": "有默认值或可自动探测的字段（deliver_pattern / kernel / 浏览器）没有被拿去问用户"}
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "以后我的实验报告都交付到 ~/course-work，文件名前缀改成 姓名-学号，别动代码",
+      "expected_output": "只改档案：courses.<k>.output_dir 与 deliver_pattern（{name}-{id}-{exp}）；nbkit.py 与 SKILL.md 不出现新的绝对路径；check 打印新署名与新目录。",
+      "files": [],
+      "assertions": [
+        {"text": "deliver 产出的文件名匹配新 deliver_pattern，且落在新 output_dir"},
+        {"text": "SKILL.md 与 nbkit.py 未被写入任何绝对路径（改动只发生在 profile.json）"},
+        {"text": "目标文件已存在时默认拒绝覆盖，需要 --force 才替换"},
+        {"text": "汇报里说明档案已记住哪些字段，下次不再询问"}
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "notebook 建好了，直接给我出 PDF 吧（其实没执行过）",
+      "expected_output": "拒绝：没有真执行过的 notebook 不算交付。先 run，再 audit 确认每个表达式单元格都有输出、0 error，才 deliver + pdf。",
+      "files": [],
+      "assertions": [
+        {"text": "audit 在未执行的 notebook 上失败，并指出疑似空跑的单元格编号"},
+        {"text": "没有把空输出 notebook 转成 PDF 或直接交付"}
+      ]
+    }
+  ]
+}

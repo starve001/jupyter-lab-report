@@ -1,0 +1,8 @@
+# nbkit 本身只用标准库；下面是执行 notebook 与出 PDF 需要的包。
+# matplotlib 可选（画图与探测中文字体），pypdf 可选（汇报页数）。
+nbformat>=2.4
+nbconvert>=7.0
+jupyter-client>=7.0
+ipykernel>=6.0
+matplotlib>=3.5
+pypdf>=3.0
